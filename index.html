@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DKA Calculator - Khemika-OPD Takhli</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root { --danger: #dc2626; --warning: #f59e0b; --primary: #2563eb; --bg: #fef2f2; }
+        body { font-family: 'Sarabun', sans-serif; background-color: var(--bg); margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { background: white; max-width: 500px; width: 100%; border-radius: 25px; overflow: hidden; box-shadow: 0 10px 30px rgba(220, 38, 38, 0.15); border: 1px solid #fee2e2; }
+        .header { background: linear-gradient(135deg, #dc2626 0%, #2563eb 100%); color: white; padding: 30px; text-align: center; }
+        .content { padding: 25px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; color: #450a0a; font-size: 14px; }
+        input { width: 100%; padding: 12px; border: 2px solid #fecaca; border-radius: 12px; box-sizing: border-box; font-size: 16px; transition: 0.3s; }
+        input:focus { border-color: var(--danger); outline: none; }
+        .calc-btn { width: 100%; padding: 18px; background: linear-gradient(to right, #dc2626, #2563eb); color: white; border: none; border-radius: 15px; font-size: 20px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        #result-box { margin-top: 25px; padding: 20px; border-radius: 15px; display: none; }
+        .res-item { margin-bottom: 10px; font-size: 18px; border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 5px; }
+        .footer { background: #f8fafc; padding: 20px; text-align: center; font-size: 14px; color: #475569; }
+        .dev-name { color: #dc2626; font-weight: bold; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>DKA Calculator</h1>
+        <p>ประเมินภาวะเลือดเป็นกรดจากเบาหวาน</p>
+    </div>
+    <div class="content">
+        <div class="grid">
+            <div><label>Glucose (mg/dL)</label><input type="number" id="glc" placeholder="เช่น 450"></div>
+            <div><label>HCO3 (mEq/L)</label><input type="number" id="hco3" placeholder="เช่น 12"></div>
+        </div>
+        <div class="grid">
+            <div><label>Na (mEq/L)</label><input type="number" id="na" placeholder="เช่น 135"></div>
+            <div><label>Cl (mEq/L)</label><input type="number" id="cl" placeholder="เช่น 100"></div>
+        </div>
+        <button class="calc-btn" onclick="calcDKA()">คำนวณประเมินผล</button>
+        
+        <div id="result-box">
+            <div class="res-item" id="ag-val"></div>
+            <div class="res-item" id="na-corr"></div>
+            <div id="status" style="font-size: 20px; font-weight: bold; margin-top: 10px; text-align: center;"></div>
+        </div>
+    </div>
+    <div style="text-align:center; padding:10px;">
+        <button onclick="toggleQR()" style="border:none; background:none; cursor:pointer; color:#999; font-size:12px;">[ QR Code ]</button>
+        <div id="qr-cont" style="display:none; justify-content:center; margin-top:10px;"><div id="qrcode"></div></div>
+    </div>
+    <div class="footer">พัฒนาโดย <span class="dev-name">Khemika-OPD Takhli</span></div>
+</div>
+
+<script>
+    function calcDKA() {
+        const glc = parseFloat(document.getElementById('glc').value);
+        const hco3 = parseFloat(document.getElementById('hco3').value);
+        const na = parseFloat(document.getElementById('na').value);
+        const cl = parseFloat(document.getElementById('cl').value);
+
+        if(!glc || !hco3 || !na || !cl) return alert("กรุณากรอกข้อมูลให้ครบถ้วนค่ะ");
+
+        // 1. Anion Gap = Na - (Cl + HCO3)
+        const ag = na - (cl + hco3);
+        
+        // 2. Corrected Sodium = Na + 1.6 * ((Glc - 100)/100)
+        const corrNa = na + (1.6 * ((glc - 100) / 100));
+
+        const resBox = document.getElementById('result-box');
+        resBox.style.display = "block";
+        
+        document.getElementById('ag-val').innerHTML = "<b>Anion Gap:</b> " + ag.toFixed(1);
+        document.getElementById('na-corr').innerHTML = "<b>Corrected Na:</b> " + corrNa.toFixed(1);
+
+        let status = "", bg = "", color = "";
+        
+        if (ag > 12 && hco3 < 18) {
+            status = "🚨 เข้าข่ายภาวะ DKA (High AG Metabolic Acidosis)";
+            bg = "#fee2e2"; color = "#b91c1c";
+        } else {
+            status = "⚠️ ผลก้ำกึ่ง โปรดพิจารณาอาการทางคลินิกและ Ketone ร่วมด้วย";
+            bg = "#fff3cd"; color = "#856404";
+        }
+
+        resBox.style.backgroundColor = bg;
+        document.getElementById('status').innerText = status;
+        document.getElementById('status').style.color = color;
+    }
+
+    new QRCode(document.getElementById("qrcode"), { text: window.location.href, width: 100, height: 100 });
+    function toggleQR() {
+        let x = document.getElementById("qr-cont");
+        x.style.display = (x.style.display === "none") ? "flex" : "none";
+    }
+</script>
+</body>
+</html>
