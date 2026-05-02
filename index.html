@@ -3,95 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DKA Calculator - Khemika-OPD Takhli</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <title>DKA/HHS Tool - Khemika OPD Takhli</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --danger: #dc2626; --warning: #f59e0b; --primary: #2563eb; --bg: #fef2f2; }
-        body { font-family: 'Sarabun', sans-serif; background-color: var(--bg); margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .container { background: white; max-width: 500px; width: 100%; border-radius: 25px; overflow: hidden; box-shadow: 0 10px 30px rgba(220, 38, 38, 0.15); border: 1px solid #fee2e2; }
-        .header { background: linear-gradient(135deg, #dc2626 0%, #2563eb 100%); color: white; padding: 30px; text-align: center; }
-        .content { padding: 25px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; color: #450a0a; font-size: 14px; }
-        input { width: 100%; padding: 12px; border: 2px solid #fecaca; border-radius: 12px; box-sizing: border-box; font-size: 16px; transition: 0.3s; }
-        input:focus { border-color: var(--danger); outline: none; }
-        .calc-btn { width: 100%; padding: 18px; background: linear-gradient(to right, #dc2626, #2563eb); color: white; border: none; border-radius: 15px; font-size: 20px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        #result-box { margin-top: 25px; padding: 20px; border-radius: 15px; display: none; }
-        .res-item { margin-bottom: 10px; font-size: 18px; border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 5px; }
-        .footer { background: #f8fafc; padding: 20px; text-align: center; font-size: 14px; color: #475569; }
-        .dev-name { color: #dc2626; font-weight: bold; }
+        :root { 
+            --primary-orange: #ff6b1e; --dark-border: #000; --soft-pink: #fff0f3;
+            --mild: #27ae60; --mod: #f39c12; --severe: #d63031;
+        }
+        body { font-family: 'Sarabun', sans-serif; background-color: var(--soft-pink); margin: 0; padding: 5px; display: flex; justify-content: center; }
+        .main-card { max-width: 480px; width: 100%; background: #fff; border-radius: 12px; border: 3px solid var(--dark-border); display: flex; flex-direction: column; }
+        
+        .header { background: linear-gradient(135deg, #ff6b1e, #e67e22); color: white; padding: 10px; text-align: center; border-bottom: 3px solid var(--dark-border); }
+        .header h1 { margin: 0; font-size: 1rem; }
+        .header p { margin: 1px 0; font-size: 0.75rem; font-weight: 700; }
+
+        .body { padding: 15px; }
+        .section-title { background: #eee; padding: 5px; font-weight: 700; border: 1px solid #000; margin: 10px 0; text-align: center; font-size: 0.9rem; }
+
+        .input-group { margin-bottom: 15px; }
+        .label { font-weight: 700; font-size: 0.85rem; color: #333; display: block; margin-bottom: 5px; }
+
+        .radio-toolbar { display: grid; grid-template-columns: 1fr; gap: 5px; }
+        .radio-toolbar input[type="radio"] { display: none; }
+        .radio-toolbar label {
+            display: block; padding: 10px; background: #f8f9fa; border: 1px solid #ccc;
+            border-radius: 6px; font-size: 0.8rem; cursor: pointer; transition: 0.2s;
+        }
+        .radio-toolbar input[type="radio"]:checked + label { background: #333; color: #fff; border-color: #000; }
+
+        .result-box { margin-top: 15px; padding: 15px; border: 3px solid #000; border-radius: 10px; display: none; text-align: center; }
+        .btn-calc { width: 100%; padding: 15px; background: var(--primary-orange); color: white; border: 2px solid #000; border-radius: 8px; font-weight: 700; font-family: 'Sarabun'; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
-<div class="container">
+
+<div class="main-card">
     <div class="header">
-        <h1>DKA Calculator</h1>
-        <p>ประเมินภาวะเลือดเป็นกรดจากเบาหวาน</p>
+        <h1>DKA & HHS Diagnostic Tool</h1>
+        <p>พัฒนาโดย Khemika-OPD Takhli</p>
     </div>
-    <div class="content">
-        <div class="grid">
-            <div><label>Glucose (mg/dL)</label><input type="number" id="glc" placeholder="เช่น 450"></div>
-            <div><label>HCO3 (mEq/L)</label><input type="number" id="hco3" placeholder="เช่น 12"></div>
+
+    <div class="body">
+        <div class="section-title">กรุณาเลือกค่าที่ตรวจพบ</div>
+
+        <!-- Glucose -->
+        <div class="input-group">
+            <span class="label">1. ระดับน้ำตาลในเลือด (Glucose)</span>
+            <div class="radio-toolbar">
+                <input type="radio" name="glu" id="g1" value="dka"><label for="g1">≥ 200 mg/dL (หรือมีประวัติเบาหวาน)</label>
+                <input type="radio" name="glu" id="g2" value="hhs"><label for="g2">≥ 600 mg/dL</label>
+                <input type="radio" name="glu" id="g0" value="normal"><label for="g0">ปกติ / อื่นๆ</label>
+            </div>
         </div>
-        <div class="grid">
-            <div><label>Na (mEq/L)</label><input type="number" id="na" placeholder="เช่น 135"></div>
-            <div><label>Cl (mEq/L)</label><input type="number" id="cl" placeholder="เช่น 100"></div>
+
+        <!-- Ketones -->
+        <div class="input-group">
+            <span class="label">2. Ketones (Urine/Blood)</span>
+            <div class="radio-toolbar">
+                <input type="radio" name="ket" id="k1" value="mild_mod"><label for="k1">Urine ≥ 2+ หรือ Blood 3.0-6.0 mmol/L</label>
+                <input type="radio" name="ket" id="k2" value="severe"><label for="k2">Blood > 6.0 mmol/L</label>
+                <input type="radio" name="ket" id="k0" value="hhs"><label for="k0">Negative หรือ < 2+ (HHS)</label>
+            </div>
         </div>
-        <button class="calc-btn" onclick="calcDKA()">คำนวณประเมินผล</button>
-        
-        <div id="result-box">
-            <div class="res-item" id="ag-val"></div>
-            <div class="res-item" id="na-corr"></div>
-            <div id="status" style="font-size: 20px; font-weight: bold; margin-top: 10px; text-align: center;"></div>
+
+        <!-- Acidosis (pH / HCO3) -->
+        <div class="input-group">
+            <span class="label">3. ภาวะกรด (pH หรือ Bicarbonate)</span>
+            <div class="radio-toolbar">
+                <input type="radio" name="acid" id="a1" value="mild"><label for="a1">pH 7.25-7.30 หรือ HCO3 15-18 (Mild)</label>
+                <input type="radio" name="acid" id="a2" value="mod"><label for="a2">pH 7.0-7.25 หรือ HCO3 10-15 (Mod)</label>
+                <input type="radio" name="acid" id="a3" value="severe"><label for="a3">pH < 7.0 หรือ HCO3 < 10 (Severe)</label>
+                <input type="radio" name="acid" id="a0" value="hhs"><label for="a0">pH ≥ 7.3 หรือ HCO3 ≥ 15 (HHS)</label>
+            </div>
+        </div>
+
+        <!-- Mental Status -->
+        <div class="input-group">
+            <span class="label">4. ระดับความรู้สึกตัว (Mental Status)</span>
+            <div class="radio-toolbar">
+                <input type="radio" name="mental" id="m1" value="alert"><label for="m1">Alert (ตื่นดี)</label>
+                <input type="radio" name="mental" id="m2" value="drowsy"><label for="m2">Drowsy (ง่วงซึม)</label>
+                <input type="radio" name="mental" id="m3" value="stupor"><label for="m3">Stupor/Coma (ไม่รู้สึกตัว)</label>
+            </div>
+        </div>
+
+        <button class="btn-calc" onclick="evaluateDKA()">ประเมินผลการคัดกรอง</button>
+
+        <div id="result" class="result-box">
+            <div id="diagText" style="font-weight: 700; font-size: 1.2rem; margin-bottom: 10px;"></div>
+            <div id="careText" style="font-size: 0.9rem; line-height: 1.4;"></div>
         </div>
     </div>
-    <div style="text-align:center; padding:10px;">
-        <button onclick="toggleQR()" style="border:none; background:none; cursor:pointer; color:#999; font-size:12px;">[ QR Code ]</button>
-        <div id="qr-cont" style="display:none; justify-content:center; margin-top:10px;"><div id="qrcode"></div></div>
-    </div>
-    <div class="footer">พัฒนาโดย <span class="dev-name">Khemika-OPD Takhli</span></div>
 </div>
 
 <script>
-    function calcDKA() {
-        const glc = parseFloat(document.getElementById('glc').value);
-        const hco3 = parseFloat(document.getElementById('hco3').value);
-        const na = parseFloat(document.getElementById('na').value);
-        const cl = parseFloat(document.getElementById('cl').value);
+    function evaluateDKA() {
+        const glu = document.querySelector('input[name="glu"]:checked')?.value;
+        const ket = document.querySelector('input[name="ket"]:checked')?.value;
+        const acid = document.querySelector('input[name="acid"]:checked')?.value;
+        const mental = document.querySelector('input[name="mental"]:checked')?.value;
 
-        if(!glc || !hco3 || !na || !cl) return alert("กรุณากรอกข้อมูลให้ครบถ้วนค่ะ");
-
-        // 1. Anion Gap = Na - (Cl + HCO3)
-        const ag = na - (cl + hco3);
-        
-        // 2. Corrected Sodium = Na + 1.6 * ((Glc - 100)/100)
-        const corrNa = na + (1.6 * ((glc - 100) / 100));
-
-        const resBox = document.getElementById('result-box');
-        resBox.style.display = "block";
-        
-        document.getElementById('ag-val').innerHTML = "<b>Anion Gap:</b> " + ag.toFixed(1);
-        document.getElementById('na-corr').innerHTML = "<b>Corrected Na:</b> " + corrNa.toFixed(1);
-
-        let status = "", bg = "", color = "";
-        
-        if (ag > 12 && hco3 < 18) {
-            status = "🚨 เข้าข่ายภาวะ DKA (High AG Metabolic Acidosis)";
-            bg = "#fee2e2"; color = "#b91c1c";
-        } else {
-            status = "⚠️ ผลก้ำกึ่ง โปรดพิจารณาอาการทางคลินิกและ Ketone ร่วมด้วย";
-            bg = "#fff3cd"; color = "#856404";
+        if (!glu || !ket || !acid || !mental) {
+            alert("กรุณาเลือกข้อมูลให้ครบทุกหัวข้อค่ะ");
+            return;
         }
 
-        resBox.style.backgroundColor = bg;
-        document.getElementById('status').innerText = status;
-        document.getElementById('status').style.color = color;
-    }
+        const resBox = document.getElementById('result');
+        const dText = document.getElementById('diagText');
+        const cText = document.getElementById('careText');
+        resBox.style.display = "block";
 
-    new QRCode(document.getElementById("qrcode"), { text: window.location.href, width: 100, height: 100 });
-    function toggleQR() {
-        let x = document.getElementById("qr-cont");
-        x.style.display = (x.style.display === "none") ? "flex" : "none";
+        // Logic based on Table 2
+        if (glu === "hhs" && ket === "hhs" && acid === "hhs") {
+            dText.innerText = "วินิจฉัย: HHS";
+            dText.style.color = "var(--severe)";
+            cText.innerHTML = "<b>Suggested Care:</b> ICU / Intermediate Care<br>เน้นการคืนน้ำ (Rehydration) และดูแลระดับน้ำตาล";
+        } else if (acid === "severe" || ket === "severe" || mental === "stupor") {
+            dText.innerText = "วินิจฉัย: Severe DKA";
+            dText.style.color = "var(--severe)";
+            cText.innerHTML = "<b>Suggested Care:</b> Intensive Care Unit (ICU)<br>เฝ้าระวังระบบทางเดินหายใจและภาวะวิกฤตอย่างใกล้ชิด";
+        } else if (acid === "mod" || mental === "drowsy") {
+            dText.innerText = "วินิจฉัย: Moderate DKA";
+            dText.style.color = "var(--mod)";
+            cText.innerHTML = "<b>Suggested Care:</b> Step-down / Intermediate Care unit";
+        } else {
+            dText.innerText = "วินิจฉัย: Mild DKA";
+            dText.style.color = "var(--mild)";
+            cText.innerHTML = "<b>Suggested Care:</b> Regular ward or observation nursing unit";
+        }
     }
 </script>
 </body>
