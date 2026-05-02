@@ -7,92 +7,166 @@
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --primary-orange: #ff6b1e; --dark-border: #000; --soft-pink: #fff0f3;
-            --mild: #27ae60; --mod: #f39c12; --severe: #d63031;
+            --header-gradient: linear-gradient(135deg, #FF512F 0%, #DD2476 100%);
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --mild-color: #2ecc71;
+            --mod-color: #f1c40f;
+            --severe-color: #e74c3c;
+            --hhs-color: #9b59b6;
         }
-        body { font-family: 'Sarabun', sans-serif; background-color: var(--soft-pink); margin: 0; padding: 5px; display: flex; justify-content: center; }
-        .main-card { max-width: 480px; width: 100%; background: #fff; border-radius: 12px; border: 3px solid var(--dark-border); display: flex; flex-direction: column; }
+
+        body { 
+            font-family: 'Sarabun', sans-serif; 
+            background-color: var(--bg-color); 
+            margin: 0; padding: 10px; 
+            display: flex; justify-content: center; 
+        }
+
+        .main-card { 
+            max-width: 480px; width: 100%; 
+            background: var(--card-bg); 
+            border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden; 
+            border: 1px solid #ddd;
+        }
         
-        .header { background: linear-gradient(135deg, #ff6b1e, #e67e22); color: white; padding: 10px; text-align: center; border-bottom: 3px solid var(--dark-border); }
-        .header h1 { margin: 0; font-size: 1rem; }
-        .header p { margin: 1px 0; font-size: 0.75rem; font-weight: 700; }
-
-        .body { padding: 15px; }
-        .section-title { background: #eee; padding: 5px; font-weight: 700; border: 1px solid #000; margin: 10px 0; text-align: center; font-size: 0.9rem; }
-
-        .input-group { margin-bottom: 15px; }
-        .label { font-weight: 700; font-size: 0.85rem; color: #333; display: block; margin-bottom: 5px; }
-
-        .radio-toolbar { display: grid; grid-template-columns: 1fr; gap: 5px; }
-        .radio-toolbar input[type="radio"] { display: none; }
-        .radio-toolbar label {
-            display: block; padding: 10px; background: #f8f9fa; border: 1px solid #ccc;
-            border-radius: 6px; font-size: 0.8rem; cursor: pointer; transition: 0.2s;
+        .header { 
+            background: var(--header-gradient); 
+            color: white; padding: 20px 15px; 
+            text-align: center; 
         }
-        .radio-toolbar input[type="radio"]:checked + label { background: #333; color: #fff; border-color: #000; }
+        .header h1 { margin: 0; font-size: 1.3rem; letter-spacing: 1px; }
+        .header p { margin: 5px 0 0; font-size: 0.8rem; opacity: 0.9; font-weight: 700; }
 
-        .result-box { margin-top: 15px; padding: 15px; border: 3px solid #000; border-radius: 10px; display: none; text-align: center; }
-        .btn-calc { width: 100%; padding: 15px; background: var(--primary-orange); color: white; border: 2px solid #000; border-radius: 8px; font-weight: 700; font-family: 'Sarabun'; cursor: pointer; margin-top: 10px; }
+        .body { padding: 20px; }
+
+        .section-box {
+            margin-bottom: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #eee;
+            background: #fff;
+        }
+
+        /* สีสันหัวข้อย่อย */
+        .sec-glucose { border-left: 6px solid #3498db; }
+        .sec-ketone { border-left: 6px solid #f39c12; }
+        .sec-acid { border-left: 6px solid #e74c3c; }
+        .sec-mental { border-left: 6px solid #9b59b6; }
+
+        .label-bar {
+            padding: 10px 15px;
+            background: #f8f9fa;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .radio-options { padding: 10px; }
+        .radio-options input[type="radio"] { display: none; }
+        .radio-options label {
+            display: block; padding: 12px; margin-bottom: 8px;
+            border-radius: 10px; cursor: pointer;
+            font-size: 0.85rem; font-weight: 700;
+            border: 2px solid #f0f0f0; transition: 0.3s;
+            text-align: center;
+        }
+
+        /* สีปุ่มเมื่อกดเลือกตามความหมาย */
+        input#g1:checked + label, input#g2:checked + label { background: #3498db; color: white; border-color: #2980b9; }
+        input#k1:checked + label { background: var(--mod-color); color: white; border-color: #d4ac0d; }
+        input#k2:checked + label { background: var(--severe-color); color: white; border-color: #c0392b; }
+        input#a1:checked + label { background: var(--mild-color); color: white; border-color: #27ae60; }
+        input#a2:checked + label { background: var(--mod-color); color: white; border-color: #d4ac0d; }
+        input#a3:checked + label { background: var(--severe-color); color: white; border-color: #c0392b; }
+        input#m3:checked + label { background: #2c3e50; color: white; border-color: #000; }
+        
+        /* สไตล์ปุ่มทั่วไปเมื่อเลือก */
+        input:checked + label { background: #333; color: white; }
+
+        .btn-calc { 
+            width: 100%; padding: 18px; 
+            background: var(--header-gradient); 
+            color: white; border: none; 
+            border-radius: 15px; font-weight: 700; 
+            font-size: 1.1rem; cursor: pointer; 
+            box-shadow: 0 4px 15px rgba(221, 36, 118, 0.3);
+            transition: 0.3s;
+        }
+        .btn-calc:active { transform: scale(0.98); }
+
+        .result-box { 
+            margin-top: 25px; padding: 20px; 
+            border-radius: 15px; display: none; 
+            text-align: center; animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .footer { text-align: center; margin-top: 20px; font-size: 0.7rem; color: #aaa; }
     </style>
 </head>
 <body>
 
 <div class="main-card">
     <div class="header">
-        <h1>DKA & HHS Diagnostic Tool</h1>
+        <h1>DKA & HHS Toolkit</h1>
         <p>พัฒนาโดย Khemika-OPD Takhli</p>
     </div>
 
     <div class="body">
-        <div class="section-title">กรุณาเลือกค่าที่ตรวจพบ</div>
-
-        <!-- Glucose -->
-        <div class="input-group">
-            <span class="label">1. ระดับน้ำตาลในเลือด (Glucose)</span>
-            <div class="radio-toolbar">
-                <input type="radio" name="glu" id="g1" value="dka"><label for="g1">≥ 200 mg/dL (หรือมีประวัติเบาหวาน)</label>
-                <input type="radio" name="glu" id="g2" value="hhs"><label for="g2">≥ 600 mg/dL</label>
-                <input type="radio" name="glu" id="g0" value="normal"><label for="g0">ปกติ / อื่นๆ</label>
+        <!-- Glucose Section -->
+        <div class="section-box sec-glucose">
+            <div class="label-bar">1. ระดับน้ำตาลในเลือด</div>
+            <div class="radio-options">
+                <input type="radio" name="glu" id="g1" value="dka"><label for="g1">≥ 200 mg/dL (หรือประวัติเบาหวาน)</label>
+                <input type="radio" name="glu" id="g2" value="hhs"><label for="g2">≥ 600 mg/dL (Severe HHS)</label>
             </div>
         </div>
 
-        <!-- Ketones -->
-        <div class="input-group">
-            <span class="label">2. Ketones (Urine/Blood)</span>
-            <div class="radio-toolbar">
-                <input type="radio" name="ket" id="k1" value="mild_mod"><label for="k1">Urine ≥ 2+ หรือ Blood 3.0-6.0 mmol/L</label>
-                <input type="radio" name="ket" id="k2" value="severe"><label for="k2">Blood > 6.0 mmol/L</label>
+        <!-- Ketones Section -->
+        <div class="section-box sec-ketone">
+            <div class="label-bar">2. Ketones (Blood/Urine)</div>
+            <div class="radio-options">
+                <input type="radio" name="ket" id="k1" value="mild_mod"><label for="k1">3.0-6.0 mmol/L หรือ Urine ≥ 2+</label>
+                <input type="radio" name="ket" id="k2" value="severe"><label for="k2">> 6.0 mmol/L (Severe Ketosis)</label>
                 <input type="radio" name="ket" id="k0" value="hhs"><label for="k0">Negative หรือ < 2+ (HHS)</label>
             </div>
         </div>
 
-        <!-- Acidosis (pH / HCO3) -->
-        <div class="input-group">
-            <span class="label">3. ภาวะกรด (pH หรือ Bicarbonate)</span>
-            <div class="radio-toolbar">
-                <input type="radio" name="acid" id="a1" value="mild"><label for="a1">pH 7.25-7.30 หรือ HCO3 15-18 (Mild)</label>
-                <input type="radio" name="acid" id="a2" value="mod"><label for="a2">pH 7.0-7.25 หรือ HCO3 10-15 (Mod)</label>
-                <input type="radio" name="acid" id="a3" value="severe"><label for="a3">pH < 7.0 หรือ HCO3 < 10 (Severe)</label>
-                <input type="radio" name="acid" id="a0" value="hhs"><label for="a0">pH ≥ 7.3 หรือ HCO3 ≥ 15 (HHS)</label>
+        <!-- Acidosis Section -->
+        <div class="section-box sec-acid">
+            <div class="label-bar">3. ภาวะกรด (pH / HCO3)</div>
+            <div class="radio-options">
+                <input type="radio" name="acid" id="a1" value="mild"><label for="a1">pH 7.25-7.30 | HCO3 15-18 (Mild)</label>
+                <input type="radio" name="acid" id="a2" value="mod"><label for="a2">pH 7.0-7.25 | HCO3 10-15 (Mod)</label>
+                <input type="radio" name="acid" id="a3" value="severe"><label for="a3">pH < 7.0 | HCO3 < 10 (Severe)</label>
+                <input type="radio" name="acid" id="a0" value="hhs"><label for="a0">pH ≥ 7.3 | HCO3 ≥ 15 (HHS)</label>
             </div>
         </div>
 
         <!-- Mental Status -->
-        <div class="input-group">
-            <span class="label">4. ระดับความรู้สึกตัว (Mental Status)</span>
-            <div class="radio-toolbar">
+        <div class="section-box sec-mental">
+            <div class="label-bar">4. ระดับความรู้สึกตัว</div>
+            <div class="radio-options">
                 <input type="radio" name="mental" id="m1" value="alert"><label for="m1">Alert (ตื่นดี)</label>
                 <input type="radio" name="mental" id="m2" value="drowsy"><label for="m2">Drowsy (ง่วงซึม)</label>
                 <input type="radio" name="mental" id="m3" value="stupor"><label for="m3">Stupor/Coma (ไม่รู้สึกตัว)</label>
             </div>
         </div>
 
-        <button class="btn-calc" onclick="evaluateDKA()">ประเมินผลการคัดกรอง</button>
+        <button class="btn-calc" onclick="evaluateDKA()">ประเมินผลเดี๋ยวนี้</button>
 
         <div id="result" class="result-box">
-            <div id="diagText" style="font-weight: 700; font-size: 1.2rem; margin-bottom: 10px;"></div>
-            <div id="careText" style="font-size: 0.9rem; line-height: 1.4;"></div>
+            <div id="diagText" style="font-weight: 700; font-size: 1.4rem; margin-bottom: 10px;"></div>
+            <div id="careText" style="font-size: 1rem; line-height: 1.5; color: #2c3e50;"></div>
         </div>
+
+        <div class="footer">OPD Takhli Digital Toolkit v7.0</div>
     </div>
 </div>
 
@@ -104,32 +178,36 @@
         const mental = document.querySelector('input[name="mental"]:checked')?.value;
 
         if (!glu || !ket || !acid || !mental) {
-            alert("กรุณาเลือกข้อมูลให้ครบทุกหัวข้อค่ะ");
-            return;
+            alert("กรุณาเลือกข้อมูลให้ครบเพื่อความแม่นยำค่ะ"); return;
         }
 
         const resBox = document.getElementById('result');
         const dText = document.getElementById('diagText');
         const cText = document.getElementById('careText');
         resBox.style.display = "block";
+        resBox.style.background = "#fdfdfd";
+        resBox.style.border = "2px solid #eee";
 
-        // Logic based on Table 2
         if (glu === "hhs" && ket === "hhs" && acid === "hhs") {
             dText.innerText = "วินิจฉัย: HHS";
-            dText.style.color = "var(--severe)";
-            cText.innerHTML = "<b>Suggested Care:</b> ICU / Intermediate Care<br>เน้นการคืนน้ำ (Rehydration) และดูแลระดับน้ำตาล";
+            dText.style.color = "var(--hhs-color)";
+            resBox.style.borderColor = "var(--hhs-color)";
+            cText.innerHTML = "🔴 <b>Suggested Care:</b> ICU / Intermediate Care<br>ให้น้ำปริมาณมากและควบคุมน้ำตาล";
         } else if (acid === "severe" || ket === "severe" || mental === "stupor") {
             dText.innerText = "วินิจฉัย: Severe DKA";
-            dText.style.color = "var(--severe)";
-            cText.innerHTML = "<b>Suggested Care:</b> Intensive Care Unit (ICU)<br>เฝ้าระวังระบบทางเดินหายใจและภาวะวิกฤตอย่างใกล้ชิด";
+            dText.style.color = "var(--severe-color)";
+            resBox.style.borderColor = "var(--severe-color)";
+            cText.innerHTML = "🔴 <b>Suggested Care:</b> ICU เท่านั้น<br>ต้องได้รับ Insulin และการดูแลภาวะวิกฤต";
         } else if (acid === "mod" || mental === "drowsy") {
             dText.innerText = "วินิจฉัย: Moderate DKA";
-            dText.style.color = "var(--mod)";
-            cText.innerHTML = "<b>Suggested Care:</b> Step-down / Intermediate Care unit";
+            dText.style.color = "var(--mod-color)";
+            resBox.style.borderColor = "var(--mod-color)";
+            cText.innerHTML = "🟠 <b>Suggested Care:</b> Step-down / Intermediate Unit";
         } else {
             dText.innerText = "วินิจฉัย: Mild DKA";
-            dText.style.color = "var(--mild)";
-            cText.innerHTML = "<b>Suggested Care:</b> Regular ward or observation nursing unit";
+            dText.style.color = "var(--mild-color)";
+            resBox.style.borderColor = "var(--mild-color)";
+            cText.innerHTML = "🟢 <b>Suggested Care:</b> Regular ward / Observation Unit";
         }
     }
 </script>
