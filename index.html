@@ -50,7 +50,7 @@
             background: #fff;
         }
 
-        /* สีสันหัวข้อย่อย */
+        /* สีสันแถบหัวข้อย่อย */
         .sec-glucose { border-left: 6px solid #3498db; }
         .sec-ketone { border-left: 6px solid #f39c12; }
         .sec-acid { border-left: 6px solid #e74c3c; }
@@ -62,9 +62,6 @@
             font-weight: 700;
             font-size: 0.95rem;
             color: #2c3e50;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         .radio-options { padding: 10px; }
@@ -75,19 +72,32 @@
             font-size: 0.85rem; font-weight: 700;
             border: 2px solid #f0f0f0; transition: 0.3s;
             text-align: center;
+            background: #ffffff;
+            color: #555;
         }
 
-        /* สีปุ่มเมื่อกดเลือกตามความหมาย */
-        input#g1:checked + label, input#g2:checked + label { background: #3498db; color: white; border-color: #2980b9; }
+        /* --- แก้ไขรหัสสีปุ่มกดเลือกให้ถูกต้องตามความรุนแรง --- */
+        
+        /* Glucose & HHS */
+        input#g1:checked + label { background: #3498db; color: white; border-color: #2980b9; }
+        input#g2:checked + label { background: var(--hhs-color); color: white; border-color: #8e44ad; }
+        input#g0:checked + label { background: #95a5a6; color: white; border-color: #7f8c8d; }
+
+        /* Ketones */
         input#k1:checked + label { background: var(--mod-color); color: white; border-color: #d4ac0d; }
         input#k2:checked + label { background: var(--severe-color); color: white; border-color: #c0392b; }
+        input#k0:checked + label { background: var(--mild-color); color: white; border-color: #27ae60; }
+
+        /* Acidosis */
         input#a1:checked + label { background: var(--mild-color); color: white; border-color: #27ae60; }
         input#a2:checked + label { background: var(--mod-color); color: white; border-color: #d4ac0d; }
         input#a3:checked + label { background: var(--severe-color); color: white; border-color: #c0392b; }
-        input#m3:checked + label { background: #2c3e50; color: white; border-color: #000; }
-        
-        /* สไตล์ปุ่มทั่วไปเมื่อเลือก */
-        input:checked + label { background: #333; color: white; }
+        input#a0:checked + label { background: var(--mild-color); color: white; border-color: #27ae60; }
+
+        /* Mental Status (จุดที่แก้ไข) */
+        input#m1:checked + label { background: var(--mild-color); color: white; border-color: #27ae60; }
+        input#m2:checked + label { background: var(--mod-color); color: white; border-color: #d4ac0d; }
+        input#m3:checked + label { background: var(--severe-color); color: white; border-color: #c0392b; }
 
         .btn-calc { 
             width: 100%; padding: 18px; 
@@ -97,6 +107,7 @@
             font-size: 1.1rem; cursor: pointer; 
             box-shadow: 0 4px 15px rgba(221, 36, 118, 0.3);
             transition: 0.3s;
+            margin-top: 10px;
         }
         .btn-calc:active { transform: scale(0.98); }
 
@@ -125,6 +136,7 @@
             <div class="radio-options">
                 <input type="radio" name="glu" id="g1" value="dka"><label for="g1">≥ 200 mg/dL (หรือประวัติเบาหวาน)</label>
                 <input type="radio" name="glu" id="g2" value="hhs"><label for="g2">≥ 600 mg/dL (Severe HHS)</label>
+                <input type="radio" name="glu" id="g0" value="normal"><label for="g0">อื่นๆ</label>
             </div>
         </div>
 
@@ -149,24 +161,25 @@
             </div>
         </div>
 
-        <!-- Mental Status -->
+        <!-- Mental Status Section -->
         <div class="section-box sec-mental">
             <div class="label-bar">4. ระดับความรู้สึกตัว</div>
             <div class="radio-options">
-                <input type="radio" name="mental" id="m1" value="alert"><label for="m1">Alert (ตื่นดี)</label>
-                <input type="radio" name="mental" id="m2" value="drowsy"><label for="m2">Drowsy (ง่วงซึม)</label>
-                <input type="radio" name="mental" id="m3" value="stupor"><label for="m3">Stupor/Coma (ไม่รู้สึกตัว)</label>
+                <input type="radio" name="mental" id="m1" value="alert"><label for="m1">Alert (ตื่นดี - ปกติ)</label>
+                <input type="radio" name="mental" id="m2" value="drowsy"><label for="m2">Drowsy (ง่วงซึม - Moderate)</label>
+                <input type="radio" name="mental" id="m3" value="stupor"><label for="m3">Stupor/Coma (ไม่รู้สึกตัว - Severe)</label>
             </div>
         </div>
 
-        <button class="btn-calc" onclick="evaluateDKA()">ประเมินผลเดี๋ยวนี้</button>
+        <button class="btn-calc" onclick="evaluateDKA()">ประเมินผลการคัดกรอง</button>
 
         <div id="result" class="result-box">
             <div id="diagText" style="font-weight: 700; font-size: 1.4rem; margin-bottom: 10px;"></div>
             <div id="careText" style="font-size: 1rem; line-height: 1.5; color: #2c3e50;"></div>
+            <button class="btn-calc" style="background: #333; margin-top: 15px; font-size: 0.9rem; padding: 10px;" onclick="location.reload()">เริ่มใหม่</button>
         </div>
 
-        <div class="footer">OPD Takhli Digital Toolkit v7.0</div>
+        <div class="footer">OPD Takhli Digital Toolkit | Khemika-OPD Takhli</div>
     </div>
 </div>
 
@@ -178,36 +191,40 @@
         const mental = document.querySelector('input[name="mental"]:checked')?.value;
 
         if (!glu || !ket || !acid || !mental) {
-            alert("กรุณาเลือกข้อมูลให้ครบเพื่อความแม่นยำค่ะ"); return;
+            alert("กรุณาเลือกข้อมูลให้ครบทุกหัวข้อเพื่อความแม่นยำค่ะ"); return;
         }
 
         const resBox = document.getElementById('result');
         const dText = document.getElementById('diagText');
         const cText = document.getElementById('careText');
         resBox.style.display = "block";
-        resBox.style.background = "#fdfdfd";
-        resBox.style.border = "2px solid #eee";
+        resBox.style.background = "#fff";
+        resBox.style.border = "3px solid #eee";
 
         if (glu === "hhs" && ket === "hhs" && acid === "hhs") {
             dText.innerText = "วินิจฉัย: HHS";
             dText.style.color = "var(--hhs-color)";
             resBox.style.borderColor = "var(--hhs-color)";
-            cText.innerHTML = "🔴 <b>Suggested Care:</b> ICU / Intermediate Care<br>ให้น้ำปริมาณมากและควบคุมน้ำตาล";
+            cText.innerHTML = "🔴 <b>Suggested Care:</b> ICU / Intermediate Care<br>เน้น Rehydration และติดตาม Electrolytes";
         } else if (acid === "severe" || ket === "severe" || mental === "stupor") {
             dText.innerText = "วินิจฉัย: Severe DKA";
             dText.style.color = "var(--severe-color)";
             resBox.style.borderColor = "var(--severe-color)";
-            cText.innerHTML = "🔴 <b>Suggested Care:</b> ICU เท่านั้น<br>ต้องได้รับ Insulin และการดูแลภาวะวิกฤต";
+            cText.innerHTML = "🔴 <b>Suggested Care:</b> ICU (Intensive Care)<br>ต้องได้รับ IV Insulin และติดตามอาการใกล้ชิด";
         } else if (acid === "mod" || mental === "drowsy") {
             dText.innerText = "วินิจฉัย: Moderate DKA";
             dText.style.color = "var(--mod-color)";
             resBox.style.borderColor = "var(--mod-color)";
             cText.innerHTML = "🟠 <b>Suggested Care:</b> Step-down / Intermediate Unit";
-        } else {
+        } else if (acid === "mild" || acid === "hhs") {
             dText.innerText = "วินิจฉัย: Mild DKA";
             dText.style.color = "var(--mild-color)";
             resBox.style.borderColor = "var(--mild-color)";
             cText.innerHTML = "🟢 <b>Suggested Care:</b> Regular ward / Observation Unit";
+        } else {
+            dText.innerText = "ไม่ตรงเกณฑ์ DKA/HHS ชัดเจน";
+            dText.style.color = "#7f8c8d";
+            cText.innerHTML = "แนะนำให้ประเมินซ้ำหรือปรึกษาแพทย์เจ้าของไข้";
         }
     }
 </script>
