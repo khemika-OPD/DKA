@@ -16,22 +16,22 @@
             --hhs-color: #9b59b6;
         }
         body { font-family: 'Sarabun', sans-serif; background-color: var(--bg-color); margin: 0; padding: 10px; display: flex; justify-content: center; }
-        .main-card { max-width: 480px; width: 100%; background: var(--card-bg); border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid #ddd; }
+        .main-card { max-width: 480px; width: 100%; background: var(--card-bg); border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid #ddd; padding-bottom: 20px; }
         .header { background: var(--header-gradient); color: white; padding: 20px 15px; text-align: center; }
         .header h1 { margin: 0; font-size: 1.3rem; letter-spacing: 1px; }
         .header p { margin: 5px 0 0; font-size: 0.8rem; opacity: 0.9; font-weight: 700; }
         .body { padding: 20px; }
-        .section-box { margin-bottom: 20px; border-radius: 12px; overflow: hidden; border: 1px solid #eee; background: #fff; }
+        .section-box { margin-bottom: 20px; border-radius: 12px; border: 1px solid #eee; background: #fff; overflow: hidden; }
         .sec-glucose { border-left: 6px solid #3498db; }
         .sec-ketone { border-left: 6px solid #f39c12; }
         .sec-acid { border-left: 6px solid #e74c3c; }
         .sec-mental { border-left: 6px solid #9b59b6; }
-        .label-bar { padding: 10px 15px; background: #f8f9fa; font-weight: 700; font-size: 0.95rem; color: #2c3e50; }
+        .label-bar { padding: 10px 15px; background: #f8f9fa; font-weight: 700; font-size: 0.95rem; }
         .radio-options { padding: 10px; }
         .radio-options input[type="radio"] { display: none; }
-        .radio-options label { display: block; padding: 12px; margin-bottom: 8px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; font-weight: 700; border: 2px solid #f0f0f0; transition: 0.3s; text-align: center; background: #ffffff; color: #555; }
+        .radio-options label { display: block; padding: 12px; margin-bottom: 8px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; font-weight: 700; border: 2px solid #f0f0f0; transition: 0.3s; text-align: center; }
         
-        /* Selection Colors */
+        /* Selection Effects */
         input#g0:checked + label, input#k0:checked + label, input#a0:checked + label, input#m1:checked + label { background: var(--mild-color); color: white; border-color: #27ae60; }
         input#g1:checked + label { background: #3498db; color: white; border-color: #2980b9; }
         input#g2:checked + label { background: var(--hhs-color); color: white; border-color: #8e44ad; }
@@ -39,9 +39,9 @@
         input#k2:checked + label, input#a3:checked + label, input#m3:checked + label { background: var(--severe-color); color: white; border-color: #c0392b; }
         input#a1:checked + label { background: var(--mild-color); color: white; border-color: #27ae60; }
 
-        .btn-calc { width: 100%; padding: 18px; background: var(--header-gradient); color: white; border: none; border-radius: 15px; font-weight: 700; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(221, 36, 118, 0.3); transition: 0.3s; margin-top: 10px; }
-        .result-box { margin-top: 25px; padding: 20px; border-radius: 15px; display: none; text-align: center; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .btn-calc { width: 100%; padding: 18px; background: var(--header-gradient); color: white; border: none; border-radius: 15px; font-weight: 700; font-size: 1.1rem; cursor: pointer; margin-top: 10px; }
+        .result-box { margin-top: 25px; padding: 20px; border-radius: 15px; display: none; text-align: center; border: 3px solid #eee; }
+        .qr-section { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px dashed #ccc; }
         .footer { text-align: center; margin-top: 20px; font-size: 0.7rem; color: #aaa; }
     </style>
 </head>
@@ -52,49 +52,56 @@
         <p>พัฒนาโดย Khemika-OPD Takhli</p>
     </div>
     <div class="body">
-        <div class="section-box sec-glucose">
-            <div class="label-bar">1. ระดับน้ำตาลในเลือด</div>
-            <div class="radio-options">
-                <input type="radio" name="glu" id="g0" value="normal"><label for="g0">ปกติ (Glucose < 200 และไม่มีประวัติเบาหวาน)</label>
-                <input type="radio" name="glu" id="g1" value="dka"><label for="g1">≥ 200 mg/dL (หรือมีประวัติเบาหวาน)</label>
-                <input type="radio" name="glu" id="g2" value="hhs"><label for="g2">≥ 600 mg/dL (HHS Criteria)</label>
-            </div>
-        </div>
-        <div class="section-box sec-ketone">
-            <div class="label-bar">2. Ketones (Blood/Urine)</div>
-            <div class="radio-options">
-                <input type="radio" name="ket" id="k0" value="hhs"><label for="k0">ปกติ (Negative หรือ < 2+)</label>
-                <input type="radio" name="ket" id="k1" value="mild_mod"><label for="k1">ปานกลาง (3.0-6.0 mmol/L หรือ Urine ≥ 2+)</label>
-                <input type="radio" name="ket" id="k2" value="severe"><label for="k2">รุนแรง (Blood > 6.0 mmol/L)</label>
-            </div>
-        </div>
-        <div class="section-box sec-acid">
-            <div class="label-bar">3. ภาวะกรด (pH / HCO3)</div>
-            <div class="radio-options">
-                <input type="radio" name="acid" id="a0" value="hhs"><label for="a0">ปกติ (pH ≥ 7.3 | HCO3 ≥ 15)</label>
-                <input type="radio" name="acid" id="a1" value="mild"><label for="a1">เป็นกรดเล็กน้อย (pH 7.25-7.30 | HCO3 15-18)</label>
-                <input type="radio" name="acid" id="a2" value="mod"><label for="a2">เป็นกรดปานกลาง (pH 7.0-7.25 | HCO3 10-15)</label>
-                <input type="radio" name="acid" id="a3" value="severe"><label for="a3">เป็นกรดรุนแรง (pH < 7.0 | HCO3 < 10)</label>
-            </div>
-        </div>
-        <div class="section-box sec-mental">
-            <div class="label-bar">4. ระดับความรู้สึกตัว</div>
-            <div class="radio-options">
-                <input type="radio" name="mental" id="m1" value="alert"><label for="m1">Alert (ตื่นดี - ปกติ)</label>
-                <input type="radio" name="mental" id="m2" value="drowsy"><label for="m2">Drowsy (ง่วงซึม - ปานกลาง)</label>
-                <input type="radio" name="mental" id="m3" value="stupor"><label for="m3">Stupor/Coma (ไม่รู้สึกตัว - รุนแรง)</label>
-            </div>
-        </div>
+        <div class="section-box sec-glucose"><div class="label-bar">1. ระดับน้ำตาลในเลือด</div><div class="radio-options">
+            <input type="radio" name="glu" id="g0" value="normal"><label for="g0">ปกติ (Glucose < 200 และไม่มีประวัติเบาหวาน)</label>
+            <input type="radio" name="glu" id="g1" value="dka"><label for="g1">≥ 200 mg/dL (หรือมีประวัติเบาหวาน)</label>
+            <input type="radio" name="glu" id="g2" value="hhs"><label for="g2">≥ 600 mg/dL (HHS Criteria)</label>
+        </div></div>
+        <div class="section-box sec-ketone"><div class="label-bar">2. Ketones (Blood/Urine)</div><div class="radio-options">
+            <input type="radio" name="ket" id="k0" value="hhs"><label for="k0">ปกติ (Negative หรือ < 2+)</label>
+            <input type="radio" name="ket" id="k1" value="mild_mod"><label for="k1">ปานกลาง (3.0-6.0 mmol/L หรือ Urine ≥ 2+)</label>
+            <input type="radio" name="ket" id="k2" value="severe"><label for="k2">รุนแรง (Blood > 6.0 mmol/L)</label>
+        </div></div>
+        <div class="section-box sec-acid"><div class="label-bar">3. ภาวะกรด (pH / HCO3)</div><div class="radio-options">
+            <input type="radio" name="acid" id="a0" value="hhs"><label for="a0">ปกติ (pH ≥ 7.3 | HCO3 ≥ 15)</label>
+            <input type="radio" name="acid" id="a1" value="mild"><label for="a1">เป็นกรดเล็กน้อย (pH 7.25-7.30 | HCO3 15-18)</label>
+            <input type="radio" name="acid" id="a2" value="mod"><label for="a2">เป็นกรดปานกลาง (pH 7.0-7.25 | HCO3 10-15)</label>
+            <input type="radio" name="acid" id="a3" value="severe"><label for="a3">เป็นกรดรุนแรง (pH < 7.0 | HCO3 < 10)</label>
+        </div></div>
+        <div class="section-box sec-mental"><div class="label-bar">4. ระดับความรู้สึกตัว</div><div class="radio-options">
+            <input type="radio" name="mental" id="m1" value="alert"><label for="m1">Alert (ตื่นดี - ปกติ)</label>
+            <input type="radio" name="mental" id="m2" value="drowsy"><label for="m2">Drowsy (ง่วงซึม - ปานกลาง)</label>
+            <input type="radio" name="mental" id="m3" value="stupor"><label for="m3">Stupor/Coma (ไม่รู้สึกตัว - รุนแรง)</label>
+        </div></div>
         <button class="btn-calc" onclick="evaluateDKA()">ประเมินผลการคัดกรอง</button>
         <div id="result" class="result-box">
             <div id="diagText" style="font-weight: 700; font-size: 1.4rem; margin-bottom: 10px;"></div>
-            <div id="careText" style="font-size: 1rem; line-height: 1.5; color: #2c3e50;"></div>
-            <button class="btn-calc" style="background: #333; margin-top: 15px; font-size: 0.9rem; padding: 10px;" onclick="location.reload()">เริ่มใหม่</button>
+            <div id="careText" style="font-size: 1rem; line-height: 1.5;"></div>
+            <button class="btn-calc" style="background: #333; font-size: 0.9rem;" onclick="location.reload()">เริ่มใหม่</button>
         </div>
-        <div class="footer">OPD Takhli Digital Toolkit | Khemika-OPD Takhli</div>
+
+        <!-- ส่วนแสดง QR Code -->
+        <div class="qr-section">
+            <p style="font-size: 0.8rem; font-weight: bold; color: #555;">สแกนเพื่อแชร์แอปนี้</p>
+            <div id="qrcode"></div>
+            <p style="font-size: 0.65rem; color: #aaa; margin-top: 8px;">Khemika-OPD Takhli Innovation</p>
+        </div>
+        <div class="footer">OPD Takhli Digital Toolkit v7.1</div>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
+    // สร้าง QR Code อัตโนมัติตาม URL ปัจจุบัน
+    new QRCode(document.getElementById("qrcode"), {
+        text: window.location.href,
+        width: 120,
+        height: 120,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    });
+
     function evaluateDKA() {
         const glu = document.querySelector('input[name="glu"]:checked')?.value;
         const ket = document.querySelector('input[name="ket"]:checked')?.value;
@@ -104,18 +111,18 @@
         const resBox = document.getElementById('result');
         const dText = document.getElementById('diagText');
         const cText = document.getElementById('careText');
-        resBox.style.display = "block"; resBox.style.background = "#fff"; resBox.style.border = "3px solid #eee";
+        resBox.style.display = "block";
         if (glu === "hhs" && ket === "hhs" && acid === "hhs") {
-            dText.innerText = "วินิจฉัย: HHS"; dText.style.color = "var(--hhs-color)"; resBox.style.borderColor = "var(--hhs-color)";
+            dText.innerText = "วินิจฉัย: HHS"; dText.style.color = "var(--hhs-color)";
             cText.innerHTML = "🔴 <b>Suggested Care:</b> ICU / Intermediate Care";
         } else if (acid === "severe" || ket === "severe" || mental === "stupor") {
-            dText.innerText = "วินิจฉัย: Severe DKA"; dText.style.color = "var(--severe-color)"; resBox.style.borderColor = "var(--severe-color)";
+            dText.innerText = "วินิจฉัย: Severe DKA"; dText.style.color = "var(--severe-color)";
             cText.innerHTML = "🔴 <b>Suggested Care:</b> ICU (Intensive Care Unit)";
         } else if (acid === "mod" || mental === "drowsy") {
-            dText.innerText = "วินิจฉัย: Moderate DKA"; dText.style.color = "var(--mod-color)"; resBox.style.borderColor = "var(--mod-color)";
+            dText.innerText = "วินิจฉัย: Moderate DKA"; dText.style.color = "var(--mod-color)";
             cText.innerHTML = "🟠 <b>Suggested Care:</b> Step-down / Intermediate Unit";
         } else if (glu === "dka" && (ket !== "hhs" || acid !== "hhs")) {
-            dText.innerText = "วินิจฉัย: Mild DKA"; dText.style.color = "var(--mild-color)"; resBox.style.borderColor = "var(--mild-color)";
+            dText.innerText = "วินิจฉัย: Mild DKA"; dText.style.color = "var(--mild-color)";
             cText.innerHTML = "🟢 <b>Suggested Care:</b> Regular ward / Observation Unit";
         } else {
             dText.innerText = "ไม่เข้าเกณฑ์ DKA/HHS"; dText.style.color = "#7f8c8d";
